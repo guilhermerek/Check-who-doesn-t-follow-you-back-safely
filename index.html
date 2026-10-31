@@ -1,272 +1,762 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cheque quem não te segue de forma segura</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔒%3C/text%3E%3C/svg%3E">
-<style>
-:root{--bg:#f2f5f7;--surface:#fff;--ink:#13202b;--muted:#5a6b78;--line:#d5dde3;--accent:#0b6e8f;--accent-ink:#fff;--warn:#b4400f;--radius:10px;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#0e161c;--surface:#16212a;--ink:#e6edf2;--muted:#93a4b0;--line:#2a3944;--accent:#4fb6d6;--accent-ink:#06222d;--warn:#f0905a;color-scheme:dark}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Avenir Next","Segoe UI",system-ui,sans-serif}
-main{max-width:860px;margin:0 auto;padding:20px 16px 56px}
-.top{display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px}
-h1{font-size:clamp(1.7rem,5vw,2.5rem);line-height:1.15;margin:8px 0 10px;letter-spacing:-.01em;max-width:18ch}
-.lead{color:var(--muted);max-width:60ch;margin:0 0 20px}
-button,.btn{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;text-decoration:none;display:inline-block}
-button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600;padding:11px 22px}
-button:hover,.btn:hover{border-color:var(--accent)}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media (max-width:640px){.grid{grid-template-columns:1fr}}
-.field{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
-.field.drag{border-color:var(--accent);border-style:dashed}
-.field label{font-weight:600;display:block;margin-bottom:6px}
-textarea{width:100%;height:150px;resize:vertical;font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
-.file{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-size:.9rem;color:var(--muted)}
-.file input{max-width:100%}
-.actions{display:flex;gap:12px;align-items:center;margin:18px 0;flex-wrap:wrap}
-.privacy{font-size:.9rem;color:var(--muted)}
-#msg{color:var(--warn);font-weight:600;min-height:1.4em;margin:0}
-#result[hidden]{display:none}
-.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:8px 0 12px}
-.bar h2{margin:0;font-size:1.25rem}
-.bar input[type=search]{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);min-width:0;flex:1 1 160px}
-.opt{font-size:.9rem;color:var(--muted);display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}
-ul.list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
-.list li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-top:1px solid var(--line)}
-.list li:first-child{border-top:0}
-.av{width:44px;height:44px;border-radius:50%;flex:none;background:var(--line);color:var(--muted);display:grid;place-items:center;font-weight:700;overflow:hidden}
-.av img{width:100%;height:100%;object-fit:cover}
-.who{min-width:0;flex:1}
-.who b{display:block;overflow:hidden;text-overflow:ellipsis}
-.who span{display:block;font-size:.85rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.empty{padding:22px;text-align:center;color:var(--muted)}
-dialog{max-width:640px;width:calc(100% - 24px);max-height:90vh;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:0}
-dialog::backdrop{background:rgba(0,0,0,.55)}
-.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
-.dh h2{margin:0;font-size:1.2rem}
-.db{padding:6px 18px 18px}
-.step{margin:18px 0}
-.step h3{margin:0 0 4px;font-size:1rem}
-.step p{margin:0 0 8px;color:var(--muted)}
-figure{margin:0}
-figure img{width:100%;border:1px solid var(--line);border-radius:8px;display:block}
-.ph{border:2px dashed var(--line);border-radius:8px;padding:22px 12px;text-align:center;color:var(--muted);font-size:.85rem}
-code{background:var(--bg);padding:1px 5px;border-radius:4px;font-size:.88em}
-</style>
-</head>
-<body>
-<main>
-  <div class="top">
-    <button id="langBtn" type="button" aria-label="Language / Idioma"></button>
-    <button id="tutBtn" type="button" data-i18n="tutorial"></button>
-  </div>
-  <h1 id="title" data-i18n="title"></h1>
-  <p class="lead" data-i18n="lead"></p>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cheque quem não te segue de forma segura</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔒%3C/text%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        --bg: #f2f5f7;
+        --surface: #fff;
+        --ink: #13202b;
+        --muted: #5a6b78;
+        --line: #d5dde3;
+        --accent: #0b6e8f;
+        --accent-ink: #fff;
+        --warn: #b4400f;
+        --radius: 10px;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e161c;
+          --surface: #16212a;
+          --ink: #e6edf2;
+          --muted: #93a4b0;
+          --line: #2a3944;
+          --accent: #4fb6d6;
+          --accent-ink: #06222d;
+          --warn: #f0905a;
+          color-scheme: dark;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          16px/1.55 'Avenir Next',
+          'Segoe UI',
+          system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 20px 16px 56px;
+      }
+      .top {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      h1 {
+        font-size: clamp(1.7rem, 5vw, 2.5rem);
+        line-height: 1.15;
+        margin: 8px 0 10px;
+        letter-spacing: -0.01em;
+        max-width: 18ch;
+      }
+      .lead {
+        color: var(--muted);
+        max-width: 60ch;
+        margin: 0 0 20px;
+      }
+      button,
+      .btn {
+        font: inherit;
+        cursor: pointer;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        padding: 8px 14px;
+        text-decoration: none;
+        display: inline-block;
+      }
+      button.primary {
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-color: var(--accent);
+        font-weight: 600;
+        padding: 11px 22px;
+      }
+      button:hover,
+      .btn:hover {
+        border-color: var(--accent);
+      }
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 640px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .field {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 12px;
+      }
+      .field.drag {
+        border-color: var(--accent);
+        border-style: dashed;
+      }
+      .field label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 6px;
+      }
+      textarea {
+        width: 100%;
+        height: 150px;
+        resize: vertical;
+        font:
+          13px/1.4 ui-monospace,
+          Menlo,
+          Consolas,
+          monospace;
+        background: var(--bg);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px;
+      }
+      .file {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      .file input {
+        max-width: 100%;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin: 18px 0;
+        flex-wrap: wrap;
+      }
+      .privacy {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      #msg {
+        color: var(--warn);
+        font-weight: 600;
+        min-height: 1.4em;
+        margin: 0;
+      }
+      #result[hidden] {
+        display: none;
+      }
+      .bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        margin: 8px 0 12px;
+      }
+      .bar h2 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+      .bar input[type='search'] {
+        font: inherit;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        min-width: 0;
+        flex: 1 1 160px;
+      }
+      .opt {
+        font-size: 0.9rem;
+        color: var(--muted);
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        margin-bottom: 10px;
+      }
+      ul.list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        overflow: hidden;
+      }
+      .list li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-top: 1px solid var(--line);
+      }
+      .list li:first-child {
+        border-top: 0;
+      }
+      .av {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        flex: none;
+        background: var(--line);
+        color: var(--muted);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        overflow: hidden;
+      }
+      .av img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .who {
+        min-width: 0;
+        flex: 1;
+      }
+      .who b {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .who span {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .empty {
+        padding: 22px;
+        text-align: center;
+        color: var(--muted);
+      }
+      dialog {
+        max-width: 640px;
+        width: calc(100% - 24px);
+        max-height: 90vh;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--surface);
+        color: var(--ink);
+        padding: 0;
+      }
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.55);
+      }
+      .dh {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        background: var(--surface);
+      }
+      .dh h2 {
+        margin: 0;
+        font-size: 1.2rem;
+      }
+      .db {
+        padding: 6px 18px 18px;
+      }
+      .step {
+        margin: 18px 0;
+      }
+      .step h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+      }
+      .step p {
+        margin: 0 0 8px;
+        color: var(--muted);
+      }
+      figure {
+        margin: 0;
+      }
+      figure img {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        display: block;
+      }
+      .ph {
+        border: 2px dashed var(--line);
+        border-radius: 8px;
+        padding: 22px 12px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      code {
+        background: var(--bg);
+        padding: 1px 5px;
+        border-radius: 4px;
+        font-size: 0.88em;
+      }
+      footer {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 16px;
+        border-top: 1px solid var(--line);
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="top">
+        <button
+          id="langBtn"
+          type="button"
+          aria-label="Language / Idioma"
+        ></button>
+        <button id="tutBtn" type="button" data-i18n="tutorial"></button>
+      </div>
+      <h1 id="title" data-i18n="title"></h1>
+      <p class="lead" data-i18n="lead"></p>
 
-  <div class="grid">
-    <div class="field" data-drop="following">
-      <label for="following" data-i18n="following"></label>
-      <textarea id="following" spellcheck="false" data-i18n-ph="ph_following"></textarea>
-      <div class="file"><input id="fileFollowing" type="file" accept=".json,application/json"></div>
-    </div>
-    <div class="field" data-drop="followers">
-      <label for="followers" data-i18n="followers"></label>
-      <textarea id="followers" spellcheck="false" data-i18n-ph="ph_followers"></textarea>
-      <div class="file"><input id="fileFollowers" type="file" accept=".json,application/json" multiple></div>
-    </div>
-  </div>
+      <div class="grid">
+        <div class="field" data-drop="following">
+          <label for="following" data-i18n="following"></label>
+          <textarea
+            id="following"
+            spellcheck="false"
+            data-i18n-ph="ph_following"
+          ></textarea>
+          <div class="file">
+            <input
+              id="fileFollowing"
+              type="file"
+              accept=".json,application/json"
+            />
+          </div>
+        </div>
+        <div class="field" data-drop="followers">
+          <label for="followers" data-i18n="followers"></label>
+          <textarea
+            id="followers"
+            spellcheck="false"
+            data-i18n-ph="ph_followers"
+          ></textarea>
+          <div class="file">
+            <input
+              id="fileFollowers"
+              type="file"
+              accept=".json,application/json"
+              multiple
+            />
+          </div>
+        </div>
+      </div>
 
-  <div class="actions">
-    <button id="go" class="primary" type="button" data-i18n="check"></button>
-    <button id="clear" type="button" data-i18n="clear"></button>
-    <span class="privacy" data-i18n="privacy"></span>
-  </div>
-  <p id="msg" role="alert"></p>
+      <div class="actions">
+        <button
+          id="go"
+          class="primary"
+          type="button"
+          data-i18n="check"
+        ></button>
+        <button id="clear" type="button" data-i18n="clear"></button>
+        <span class="privacy" data-i18n="privacy"></span>
+      </div>
+      <p id="msg" role="alert"></p>
 
-  <section id="result" hidden>
-    <div class="bar">
-      <h2 id="count"></h2>
-      <input id="q" type="search" data-i18n-ph="search">
-      <button id="copy" type="button" data-i18n="copy"></button>
-    </div>
-    <label class="opt"><input id="photos" type="checkbox"><span data-i18n="photos"></span></label>
-    <ul id="list" class="list"></ul>
-  </section>
-</main>
+      <section id="result" hidden>
+        <div class="bar">
+          <h2 id="count"></h2>
+          <input id="q" type="search" data-i18n-ph="search" />
+          <button id="copy" type="button" data-i18n="copy"></button>
+        </div>
+        <label class="opt"
+          ><input id="photos" type="checkbox" /><span data-i18n="photos"></span
+        ></label>
+        <ul id="list" class="list"></ul>
+      </section>
+    </main>
+    <footer data-i18n="footer"></footer>
+    <dialog id="tut" aria-labelledby="tutTitle">
+      <div class="dh">
+        <h2 id="tutTitle" data-i18n="tutorial_title"></h2>
+        <button id="tutClose" type="button" data-i18n="close"></button>
+      </div>
+      <div class="db" id="steps"></div>
+    </dialog>
 
-<dialog id="tut" aria-labelledby="tutTitle">
-  <div class="dh"><h2 id="tutTitle" data-i18n="tutorial_title"></h2><button id="tutClose" type="button" data-i18n="close"></button></div>
-  <div class="db" id="steps"></div>
-</dialog>
+    <script>
+      const I18N = {
+        pt: {
+          title: 'Cheque quem não te segue de forma segura',
+          lead: 'Descubra quem você segue no Instagram, mas não segue você de volta. Tudo é calculado no seu navegador: seus arquivos não são enviados a nenhum servidor.',
+          tutorial: 'Tutorial',
+          tutorial_title: 'Como baixar seus dados do Instagram',
+          close: 'Fechar',
+          following: 'Seguindo',
+          followers: 'Seguidores',
+          ph_following: 'Cole aqui o conteúdo de following.json',
+          ph_followers: 'Cole aqui o conteúdo de followers_1.json',
+          check: 'Consultar',
+          clear: 'Limpar',
+          privacy: 'Nenhum dado sai do seu dispositivo.',
+          search: 'Filtrar por nome',
+          copy: 'Copiar lista',
+          copied: 'Copiado!',
+          photos:
+            'Mostrar fotos de perfil (consulta o serviço de terceiros unavatar.io, que recebe os nomes de usuário; pode não carregar todas)',
+          open: 'Abrir perfil',
+          none: 'Todos que você segue também seguem você de volta.',
+          nomatch: 'Nenhum resultado para o filtro.',
+          res: (n, t) => `${n} de ${t} não seguem você de volta`,
+          e_empty: 'Informe os dois arquivos: seguindo e seguidores.',
+          e_json: 'JSON inválido em “%s”. Confira se copiou o arquivo inteiro.',
+          e_none:
+            'Não encontrei perfis em “%s”. Confira se é o arquivo correto.',
+          steps: [
+            [
+              'Abra as configurações',
+              'No Instagram, vá ao seu perfil, toque no menu (☰) e abra “Configurações e atividade”.',
+            ],
+            [
+              'Central de Contas',
+              'Entre em “Central de Contas” → “Suas informações e permissões” → “Baixar suas informações”.',
+            ],
+            [
+              'Escolha o que baixar',
+              'Toque em “Baixar ou transferir informações”, escolha sua conta do Instagram, depois “Parte das suas informações” e marque “Seguidores e seguindo”.',
+            ],
+            [
+              'Formato JSON',
+              'Escolha “Baixar no dispositivo”, período “Todo o período” e formato <b>JSON</b>. Confirme o pedido.',
+            ],
+            [
+              'Aguarde e baixe',
+              'O Instagram avisa por e-mail quando o arquivo estiver pronto (de minutos a horas). Baixe o .zip e extraia.',
+            ],
+            [
+              'Use os arquivos aqui',
+              'Na pasta <code>connections/followers_and_following</code> estão <code>following.json</code> e <code>followers_1.json</code>. Cole o conteúdo nos campos ou envie os arquivos. Os nomes dos menus podem mudar com o tempo.',
+            ],
+          ],
+          footer: 'Criado com Claude Sonnet 5.5',
+        },
+        en: {
+          title: 'Check who doesn’t follow you back, safely',
+          lead: 'Find out who you follow on Instagram that doesn’t follow you back. Everything is computed in your browser: your files are never uploaded to any server.',
+          tutorial: 'Tutorial',
+          tutorial_title: 'How to download your Instagram data',
+          close: 'Close',
+          following: 'Following',
+          followers: 'Followers',
+          ph_following: 'Paste the contents of following.json here',
+          ph_followers: 'Paste the contents of followers_1.json here',
+          check: 'Check',
+          clear: 'Clear',
+          privacy: 'No data leaves your device.',
+          search: 'Filter by name',
+          copy: 'Copy list',
+          copied: 'Copied!',
+          photos:
+            'Show profile photos (queries the third-party service unavatar.io, which receives the usernames; some may not load)',
+          open: 'Open profile',
+          none: 'Everyone you follow also follows you back.',
+          nomatch: 'No results for this filter.',
+          res: (n, t) => `${n} of ${t} don’t follow you back`,
+          e_empty: 'Provide both files: following and followers.',
+          e_json: 'Invalid JSON in “%s”. Make sure you copied the whole file.',
+          e_none: 'No profiles found in “%s”. Make sure it’s the right file.',
+          steps: [
+            [
+              'Open settings',
+              'In Instagram, go to your profile, tap the menu (☰) and open “Settings and activity”.',
+            ],
+            [
+              'Accounts Center',
+              'Go to “Accounts Center” → “Your information and permissions” → “Download your information”.',
+            ],
+            [
+              'Choose what to download',
+              'Tap “Download or transfer information”, pick your Instagram account, then “Some of your information” and select “Followers and following”.',
+            ],
+            [
+              'JSON format',
+              'Choose “Download to device”, date range “All time” and format <b>JSON</b>. Submit the request.',
+            ],
+            [
+              'Wait and download',
+              'Instagram emails you when the file is ready (minutes to hours). Download the .zip and extract it.',
+            ],
+            [
+              'Use the files here',
+              'In <code>connections/followers_and_following</code> you’ll find <code>following.json</code> and <code>followers_1.json</code>. Paste their contents into the fields or upload the files. Menu names may change over time.',
+            ],
+          ],
+          footer: 'Created with Claude Sonnet 5.5',
+        },
+      };
 
-<script>
-const I18N = {
-  pt: {
-    title:"Cheque quem não te segue de forma segura",
-    lead:"Descubra quem você segue no Instagram, mas não segue você de volta. Tudo é calculado no seu navegador: seus arquivos não são enviados a nenhum servidor.",
-    tutorial:"Tutorial", tutorial_title:"Como baixar seus dados do Instagram", close:"Fechar",
-    following:"Seguindo", followers:"Seguidores",
-    ph_following:"Cole aqui o conteúdo de following.json", ph_followers:"Cole aqui o conteúdo de followers_1.json",
-    check:"Consultar", clear:"Limpar", privacy:"Nenhum dado sai do seu dispositivo.",
-    search:"Filtrar por nome", copy:"Copiar lista", copied:"Copiado!",
-    photos:"Mostrar fotos de perfil (consulta o serviço de terceiros unavatar.io, que recebe os nomes de usuário; pode não carregar todas)",
-    open:"Abrir perfil", none:"Todos que você segue também seguem você de volta.", nomatch:"Nenhum resultado para o filtro.",
-    res:(n,t)=>`${n} de ${t} não seguem você de volta`,
-    e_empty:"Informe os dois arquivos: seguindo e seguidores.", e_json:"JSON inválido em “%s”. Confira se copiou o arquivo inteiro.",
-    e_none:"Não encontrei perfis em “%s”. Confira se é o arquivo correto.",
-    steps:[
-      ["Abra as configurações","No Instagram, vá ao seu perfil, toque no menu (☰) e abra “Configurações e atividade”."],
-      ["Central de Contas","Entre em “Central de Contas” → “Suas informações e permissões” → “Baixar suas informações”."],
-      ["Escolha o que baixar","Toque em “Baixar ou transferir informações”, escolha sua conta do Instagram, depois “Parte das suas informações” e marque “Seguidores e seguindo”."],
-      ["Formato JSON","Escolha “Baixar no dispositivo”, período “Todo o período” e formato <b>JSON</b>. Confirme o pedido."],
-      ["Aguarde e baixe","O Instagram avisa por e-mail quando o arquivo estiver pronto (de minutos a horas). Baixe o .zip e extraia."],
-      ["Use os arquivos aqui","Na pasta <code>connections/followers_and_following</code> estão <code>following.json</code> e <code>followers_1.json</code>. Cole o conteúdo nos campos ou envie os arquivos. Os nomes dos menus podem mudar com o tempo."]
-    ]
-  },
-  en: {
-    title:"Check who doesn’t follow you back, safely",
-    lead:"Find out who you follow on Instagram that doesn’t follow you back. Everything is computed in your browser: your files are never uploaded to any server.",
-    tutorial:"Tutorial", tutorial_title:"How to download your Instagram data", close:"Close",
-    following:"Following", followers:"Followers",
-    ph_following:"Paste the contents of following.json here", ph_followers:"Paste the contents of followers_1.json here",
-    check:"Check", clear:"Clear", privacy:"No data leaves your device.",
-    search:"Filter by name", copy:"Copy list", copied:"Copied!",
-    photos:"Show profile photos (queries the third-party service unavatar.io, which receives the usernames; some may not load)",
-    open:"Open profile", none:"Everyone you follow also follows you back.", nomatch:"No results for this filter.",
-    res:(n,t)=>`${n} of ${t} don’t follow you back`,
-    e_empty:"Provide both files: following and followers.", e_json:"Invalid JSON in “%s”. Make sure you copied the whole file.",
-    e_none:"No profiles found in “%s”. Make sure it’s the right file.",
-    steps:[
-      ["Open settings","In Instagram, go to your profile, tap the menu (☰) and open “Settings and activity”."],
-      ["Accounts Center","Go to “Accounts Center” → “Your information and permissions” → “Download your information”."],
-      ["Choose what to download","Tap “Download or transfer information”, pick your Instagram account, then “Some of your information” and select “Followers and following”."],
-      ["JSON format","Choose “Download to device”, date range “All time” and format <b>JSON</b>. Submit the request."],
-      ["Wait and download","Instagram emails you when the file is ready (minutes to hours). Download the .zip and extract it."],
-      ["Use the files here","In <code>connections/followers_and_following</code> you’ll find <code>following.json</code> and <code>followers_1.json</code>. Paste their contents into the fields or upload the files. Menu names may change over time."]
-    ]
-  }
-};
+      const $ = (id) => document.getElementById(id);
+      const nav =
+        (navigator.languages && navigator.languages[0]) ||
+        navigator.language ||
+        'en';
+      let lang = nav.toLowerCase().startsWith('pt') ? 'pt' : 'en';
+      let missing = [];
 
-const $ = id => document.getElementById(id);
-const nav = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
-let lang = nav.toLowerCase().startsWith("pt") ? "pt" : "en";
-let missing = [];
+      function applyLang() {
+        const t = I18N[lang];
+        document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+        document.title = t.title;
+        document
+          .querySelectorAll('[data-i18n]')
+          .forEach((e) => (e.textContent = t[e.dataset.i18n]));
+        document
+          .querySelectorAll('[data-i18n-ph]')
+          .forEach((e) => (e.placeholder = t[e.dataset.i18nPh]));
+        $('langBtn').textContent = lang === 'pt' ? 'English' : 'Português';
+        const steps = $('steps');
+        steps.replaceChildren();
+        t.steps.forEach((s, i) => {
+          const d = document.createElement('div');
+          d.className = 'step';
+          d.innerHTML = `<h3>${i + 1}. ${s[0]}</h3><p>${s[1]}</p>`;
+          const fig = document.createElement('figure');
+          const img = new Image();
+          img.alt = s[0];
+          img.loading = 'lazy';
+          img.src = `assets/tutorial-${i + 1}.png`;
+          img.onerror = () => {
+            const p = document.createElement('div');
+            p.className = 'ph';
+            p.textContent = `assets/tutorial-${i + 1}.png`;
+            img.replaceWith(p);
+          };
+          fig.append(img);
+          d.append(fig);
+          steps.append(d);
+        });
+        if (missing.length) render();
+      }
 
-function applyLang(){
-  const t = I18N[lang];
-  document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
-  document.title = t.title;
-  document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t[e.dataset.i18n]);
-  document.querySelectorAll("[data-i18n-ph]").forEach(e => e.placeholder = t[e.dataset.i18nPh]);
-  $("langBtn").textContent = lang === "pt" ? "English" : "Português";
-  const steps = $("steps"); steps.replaceChildren();
-  t.steps.forEach((s,i) => {
-    const d = document.createElement("div"); d.className = "step";
-    d.innerHTML = `<h3>${i+1}. ${s[0]}</h3><p>${s[1]}</p>`;
-    const fig = document.createElement("figure");
-    const img = new Image(); img.alt = s[0]; img.loading = "lazy";
-    img.src = `assets/tutorial-${i+1}.png`;
-    img.onerror = () => { const p = document.createElement("div"); p.className = "ph"; p.textContent = `assets/tutorial-${i+1}.png`; img.replaceWith(p); };
-    fig.append(img); d.append(fig); steps.append(d);
-  });
-  if (missing.length) render();
-}
+      /* ---------- parsing ---------- */
+      function usernameFromHref(h) {
+        try {
+          return new URL(h).pathname.split('/').filter(Boolean).pop() || '';
+        } catch (e) {
+          return '';
+        }
+      }
+      function extract(data) {
+        let items = Array.isArray(data)
+          ? data
+          : (data && typeof data === 'object'
+              ? Object.values(data).find(Array.isArray)
+              : null) || [];
+        const map = new Map();
+        for (const it of items) {
+          const s = (it.string_list_data || [])[0] || {};
+          let name = (s.value || it.title || usernameFromHref(s.href) || '')
+            .trim()
+            .replace(/^@/, '');
+          if (/^[A-Za-z0-9._]+$/.test(name)) map.set(name.toLowerCase(), name);
+        }
+        return map;
+      }
+      function parse(text, label) {
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          throw new Error(I18N[lang].e_json.replace('%s', label));
+        }
+        const m = extract(data);
+        if (!m.size) throw new Error(I18N[lang].e_none.replace('%s', label));
+        return m;
+      }
 
-/* ---------- parsing ---------- */
-function usernameFromHref(h){ try{ return new URL(h).pathname.split("/").filter(Boolean).pop() || ""; }catch(e){ return ""; } }
-function extract(data){
-  let items = Array.isArray(data) ? data : (data && typeof data === "object" ? Object.values(data).find(Array.isArray) : null) || [];
-  const map = new Map();
-  for (const it of items){
-    const s = (it.string_list_data || [])[0] || {};
-    let name = (s.value || it.title || usernameFromHref(s.href) || "").trim().replace(/^@/, "");
-    if (/^[A-Za-z0-9._]+$/.test(name)) map.set(name.toLowerCase(), name);
-  }
-  return map;
-}
-function parse(text, label){
-  let data;
-  try { data = JSON.parse(text); } catch(e){ throw new Error(I18N[lang].e_json.replace("%s", label)); }
-  const m = extract(data);
-  if (!m.size) throw new Error(I18N[lang].e_none.replace("%s", label));
-  return m;
-}
+      /* ---------- file input / drop ---------- */
+      async function loadFiles(files, target) {
+        const parts = [];
+        for (const f of files) {
+          try {
+            parts.push(JSON.parse(await f.text()));
+          } catch (e) {
+            $(target).value = await f.text();
+            return;
+          }
+        }
+        let merged = parts[0];
+        if (parts.length > 1) {
+          merged = Array.isArray(parts[0])
+            ? parts.flat()
+            : Object.fromEntries(
+                Object.keys(parts[0]).map((k) => [
+                  k,
+                  parts.flatMap((p) => p[k] || []),
+                ]),
+              );
+        }
+        $(target).value = JSON.stringify(merged);
+      }
+      $('fileFollowing').onchange = (e) =>
+        loadFiles(e.target.files, 'following');
+      $('fileFollowers').onchange = (e) =>
+        loadFiles(e.target.files, 'followers');
+      document.querySelectorAll('[data-drop]').forEach((box) => {
+        box.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          box.classList.add('drag');
+        });
+        box.addEventListener('dragleave', () => box.classList.remove('drag'));
+        box.addEventListener('drop', (e) => {
+          e.preventDefault();
+          box.classList.remove('drag');
+          loadFiles(e.dataTransfer.files, box.dataset.drop);
+        });
+      });
 
-/* ---------- file input / drop ---------- */
-async function loadFiles(files, target){
-  const parts = [];
-  for (const f of files){ try{ parts.push(JSON.parse(await f.text())); }catch(e){ $(target).value = await f.text(); return; } }
-  let merged = parts[0];
-  if (parts.length > 1){
-    merged = Array.isArray(parts[0]) ? parts.flat()
-      : Object.fromEntries(Object.keys(parts[0]).map(k => [k, parts.flatMap(p => p[k] || [])]));
-  }
-  $(target).value = JSON.stringify(merged);
-}
-$("fileFollowing").onchange = e => loadFiles(e.target.files, "following");
-$("fileFollowers").onchange = e => loadFiles(e.target.files, "followers");
-document.querySelectorAll("[data-drop]").forEach(box => {
-  box.addEventListener("dragover", e => { e.preventDefault(); box.classList.add("drag"); });
-  box.addEventListener("dragleave", () => box.classList.remove("drag"));
-  box.addEventListener("drop", e => { e.preventDefault(); box.classList.remove("drag"); loadFiles(e.dataTransfer.files, box.dataset.drop); });
-});
+      /* ---------- compare + render ---------- */
+      let total = 0;
+      $('go').onclick = () => {
+        const msg = $('msg');
+        msg.textContent = '';
+        const a = $('following').value.trim(),
+          b = $('followers').value.trim();
+        if (!a || !b) {
+          msg.textContent = I18N[lang].e_empty;
+          return;
+        }
+        try {
+          const fing = parse(a, I18N[lang].following),
+            fers = parse(b, I18N[lang].followers);
+          total = fing.size;
+          missing = [...fing]
+            .filter(([k]) => !fers.has(k))
+            .map(([, v]) => v)
+            .sort((x, y) => x.localeCompare(y));
+          $('result').hidden = false;
+          $('q').value = '';
+          render();
+          $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (e) {
+          msg.textContent = e.message;
+          $('result').hidden = true;
+        }
+      };
+      $('clear').onclick = () => {
+        [
+          'following',
+          'followers',
+          'fileFollowing',
+          'fileFollowers',
+          'q',
+        ].forEach((i) => ($(i).value = ''));
+        missing = [];
+        $('result').hidden = true;
+        $('msg').textContent = '';
+      };
+      $('q').oninput = render;
+      $('photos').onchange = render;
 
-/* ---------- compare + render ---------- */
-let total = 0;
-$("go").onclick = () => {
-  const msg = $("msg"); msg.textContent = "";
-  const a = $("following").value.trim(), b = $("followers").value.trim();
-  if (!a || !b){ msg.textContent = I18N[lang].e_empty; return; }
-  try {
-    const fing = parse(a, I18N[lang].following), fers = parse(b, I18N[lang].followers);
-    total = fing.size;
-    missing = [...fing].filter(([k]) => !fers.has(k)).map(([,v]) => v).sort((x,y) => x.localeCompare(y));
-    $("result").hidden = false; $("q").value = ""; render();
-    $("result").scrollIntoView({behavior:"smooth", block:"start"});
-  } catch(e){ msg.textContent = e.message; $("result").hidden = true; }
-};
-$("clear").onclick = () => { ["following","followers","fileFollowing","fileFollowers","q"].forEach(i => $(i).value = ""); missing = []; $("result").hidden = true; $("msg").textContent = ""; };
-$("q").oninput = render; $("photos").onchange = render;
+      function render() {
+        const t = I18N[lang],
+          q = $('q').value.trim().toLowerCase(),
+          ul = $('list');
+        $('count').textContent = t.res(missing.length, total);
+        const shown = missing.filter((n) => n.toLowerCase().includes(q));
+        ul.replaceChildren();
+        if (!shown.length) {
+          const li = document.createElement('li');
+          li.className = 'empty';
+          li.textContent = missing.length ? t.nomatch : t.none;
+          ul.append(li);
+          return;
+        }
+        const photos = $('photos').checked,
+          frag = document.createDocumentFragment();
+        for (const n of shown) {
+          const url = `https://www.instagram.com/${n}/`;
+          const li = document.createElement('li');
+          const av = document.createElement('div');
+          av.className = 'av';
+          av.textContent = n[0].toUpperCase();
+          if (photos) {
+            const img = new Image();
+            img.loading = 'lazy';
+            img.alt = '';
+            img.referrerPolicy = 'no-referrer';
+            img.src = `https://unavatar.io/instagram/${encodeURIComponent(n)}?fallback=false`;
+            img.onload = () => av.replaceChildren(img);
+          }
+          const who = document.createElement('div');
+          who.className = 'who';
+          const b = document.createElement('b');
+          b.textContent = '@' + n;
+          const s = document.createElement('span');
+          s.textContent = url;
+          who.append(b, s);
+          const a = document.createElement('a');
+          a.className = 'btn';
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.textContent = t.open;
+          li.append(av, who, a);
+          frag.append(li);
+        }
+        ul.append(frag);
+      }
+      $('copy').onclick = async () => {
+        const txt = missing
+          .map((n) => `${n} https://www.instagram.com/${n}/`)
+          .join('\n');
+        try {
+          await navigator.clipboard.writeText(txt);
+          const b = $('copy');
+          b.textContent = I18N[lang].copied;
+          setTimeout(() => (b.textContent = I18N[lang].copy), 1500);
+        } catch (e) {}
+      };
 
-function render(){
-  const t = I18N[lang], q = $("q").value.trim().toLowerCase(), ul = $("list");
-  $("count").textContent = t.res(missing.length, total);
-  const shown = missing.filter(n => n.toLowerCase().includes(q));
-  ul.replaceChildren();
-  if (!shown.length){ const li = document.createElement("li"); li.className = "empty"; li.textContent = missing.length ? t.nomatch : t.none; ul.append(li); return; }
-  const photos = $("photos").checked, frag = document.createDocumentFragment();
-  for (const n of shown){
-    const url = `https://www.instagram.com/${n}/`;
-    const li = document.createElement("li");
-    const av = document.createElement("div"); av.className = "av"; av.textContent = n[0].toUpperCase();
-    if (photos){
-      const img = new Image(); img.loading = "lazy"; img.alt = ""; img.referrerPolicy = "no-referrer";
-      img.src = `https://unavatar.io/instagram/${encodeURIComponent(n)}?fallback=false`;
-      img.onload = () => av.replaceChildren(img);
-    }
-    const who = document.createElement("div"); who.className = "who";
-    const b = document.createElement("b"); b.textContent = "@" + n;
-    const s = document.createElement("span"); s.textContent = url;
-    who.append(b, s);
-    const a = document.createElement("a"); a.className = "btn"; a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = t.open;
-    li.append(av, who, a); frag.append(li);
-  }
-  ul.append(frag);
-}
-$("copy").onclick = async () => {
-  const txt = missing.map(n => `${n} https://www.instagram.com/${n}/`).join("\n");
-  try { await navigator.clipboard.writeText(txt); const b = $("copy"); b.textContent = I18N[lang].copied; setTimeout(() => b.textContent = I18N[lang].copy, 1500); } catch(e){}
-};
-
-/* ---------- misc ---------- */
-$("langBtn").onclick = () => { lang = lang === "pt" ? "en" : "pt"; applyLang(); };
-$("tutBtn").onclick = () => $("tut").showModal();
-$("tutClose").onclick = () => $("tut").close();
-$("tut").addEventListener("click", e => { if (e.target === $("tut")) $("tut").close(); });
-applyLang();
-</script>
-</body>
+      /* ---------- misc ---------- */
+      $('langBtn').onclick = () => {
+        lang = lang === 'pt' ? 'en' : 'pt';
+        applyLang();
+      };
+      $('tutBtn').onclick = () => $('tut').showModal();
+      $('tutClose').onclick = () => $('tut').close();
+      $('tut').addEventListener('click', (e) => {
+        if (e.target === $('tut')) $('tut').close();
+      });
+      applyLang();
+    </script>
+  </body>
 </html>
